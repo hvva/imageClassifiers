@@ -1,7 +1,10 @@
-[[[Requires]]]
+# Requires
 * python-matplotlib
 * python-tk
 * Python Image Library
 
-Inside the script directory: git clone https://github.com/vlfeat/vlfeat.git
+*Note* vlfeat is a submodule. Once you clone imageClassifiers
+ you have to initialize the submodules:
+* git submodule init
+* git submodule update
 
