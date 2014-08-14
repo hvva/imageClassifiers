@@ -1,5 +1,5 @@
 #!/usr/bin/python
-__author__ = 'Joshua I. James, DongSam Byun, JungMin Park'
+__author__ = 'Joshua I. James, DongSam Byun, JungMin Park, Jeong Jae Hun'
 import sys, getopt, os, pca
 from PIL import Image
 from numpy import *
