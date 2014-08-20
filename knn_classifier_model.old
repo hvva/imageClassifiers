@@ -11,11 +11,10 @@ from scipy.cluster.vq import *
 
 # Store input and output file names
 # Set if you want a default
-typeFeats = 'dsift'
-featTypes = ['sift','dsift']
-dirTrain = 'features/train'
-dirTest = 'features/test'
-dirNolabel = ''#'features/nolabel'
+typeFeats='dsift'
+featTypes=['sift','dsift']
+dirTrain='features/train'
+dirTest='features/test'
 modelIn=''
 modelOut=''
 k=''
@@ -24,19 +23,18 @@ imlist=''
 featlist = []
 
 def print_error():
-	print("Usage: %s -f feat_type [-m model_in] [-M model_out] -l train_dir -t test_dir [-n non_labeled_dir] -k neighbors [-p 1]" % sys.argv[0])
+	print("Usage: %s -f feat_type [-m model_in] [-M model_out] -l train_dir -t test_dir -k neighbors [-p 1]" % sys.argv[0])
 	print("		-f: Feature types [sift/dsift]")
 	print("		-m: Trained model file")
 	print("		-M: Model output file")
 	print("		-l: Directory of training features")
 	print("		-t: Directory of test features")
-	print("		-n: Directory of NON-LABLED features")
 	print("		-k: K-nearest")
 	print("		-p: Use PCA")
 	sys.exit(1)
 
 # Read command line args
-myopts, args = getopt.getopt(sys.argv[1:],"f:l:m:M:t:n:p:s:")
+myopts, args = getopt.getopt(sys.argv[1:],"f:l:m:M:t:k:p:")
 
 ###############################
 # o == option
@@ -53,8 +51,6 @@ for o, a in myopts:
 				modelOut=a
 		elif o == '-t':
 				dirTest=a
-		elif o == '-n':
-				dirNolabel=a
 		elif o == '-k':
 				k=a
 		elif o == '-p':
@@ -86,7 +82,7 @@ if not k:
 else:
 	k=int(k)
 
-def read_feature_labels(path, noLabel=False):
+def read_feature_labels(path):
 	if typeFeats == 'dsift':
 		featlist = [os.path.join(path,f) for f in os.listdir(path) if f.endswith('.dsift')]
 	elif typeFeats == 'sift':
@@ -100,12 +96,8 @@ def read_feature_labels(path, noLabel=False):
 		features.append(d.flatten())
 	features = array(features)
 
-	if noLabel:
-		# just return filenames
-		labels = [featfile for featfile in featlist]
-	else:
-		# create labels
-		labels = [featfile.split('/')[-1][0] for featfile in featlist]
+	# create labels
+	labels = [featfile.split('/')[-1][0] for featfile in featlist]
 
 	return features,array(labels)
 
@@ -145,12 +137,5 @@ res = array([knn_classifier.classify(test_features[i],k) for i in range(len(test
 # accuracy
 acc = sum(1.0*(res==test_labels)) / len(test_labels)
 print 'Accuracy:', acc
-print_confusion(res,test_labels,classnames)
 
-if dirNolabel:
-	nolabel_features, nolabel_fnames = read_feature_labels(dirNolabel, True)
-	res = array([knn_classifier.classify(nolabel_features[i],k) for i in range(len(nolabel_fnames))])
-	print 'results : '
-	for i in range(len(nolabel_fnames)):
-		print res[i],
-		print nolabel_fnames[i]
+print_confusion(res,test_labels,classnames)
