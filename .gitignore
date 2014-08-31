@@ -3,3 +3,4 @@ features
 models
 *.pyc
 *.pgm
+*.frame
