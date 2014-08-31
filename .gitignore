@@ -1,3 +1,5 @@
 corpus
 features
 models
+*.pyc
+*.pgm
